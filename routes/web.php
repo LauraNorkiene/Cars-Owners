@@ -17,15 +17,24 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::middleware('auth')->group(function () {
+    Route::resource('cars', CarController::class);
+    Route::post('/owners/{id}/addCar',[OwnerController::class,'addCar'])->name('owners.addCar');
+    Route::resource('owners', OwnerController::class);
+});
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
 
 });
 
-Route::resource('cars', CarController::class);
-Route::resource('owners', OwnerController::class);
-//Route::get('/cars',[CarController::class, 'rodykMasinas' ]);
 
 
 
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('cars');
+Route::get('/logout', 'LogoutController@perform')->name('logout.perform');

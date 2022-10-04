@@ -36,9 +36,18 @@ class OwnerController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name'=>['required','alpha_num','min:3', 'max:16'],
+            'surname'=>['required','alpha_num','min:3', 'max:16'],
+            'email'=>['required','alpha_num','min:3', 'max:16','unique:App\Models\Owner,email'],
+            'phone'=>['required','alpha_num','min:3', 'max:16','unique:App\Models\Owner,phone'],
+        ]);
+
         $owner = new Owner();
         $owner->name = $request->name;
         $owner->surname = $request->surname;
+        $owner->email = $request->email;
+        $owner->phone = $request->phone;
 
         $owner->save();
 
@@ -53,7 +62,7 @@ class OwnerController extends Controller
      */
     public function show(Owner $owner)
     {
-        return "rodyti viena";
+
     }
 
     /**
@@ -76,10 +85,16 @@ class OwnerController extends Controller
      */
     public function update(Request $request, Owner $owner)
     {
+        $request->validate([
+            'name'=>['required','alpha_num','min:3', 'max:16'],
+            'surname'=>['required','alpha_num','min:3', 'max:16'],
+            'email'=>['required','alpha_num','min:3', 'max:16','unique:App\Models\Owner,email'],
+            'phone'=>['required','alpha_num','min:3', 'max:16','unique:App\Models\Owner,phone'],
+        ]);
         $owner->name = $request->name;
         $owner->surname = $request->surname;
-
-
+        $owner->email = $request->email;
+        $owner->phone = $request->phone;
         $owner->save();
         return redirect()->route('owners.index');
     }
@@ -96,11 +111,12 @@ class OwnerController extends Controller
         return redirect()->route('owners.index');
     }
 
-
-
-    public function rodykSavininkus(){
-        $owner= Owner::all();
-        return view("owners.index",['owners'=>$owners]);
+    public function addCar($id, Request $request) {
+        $car=new Car();
+        $car->reg_number=$request->reg_number;
+        $car->owner_id=$id;
+        $car->save();
+        return redirect()->route('owners.edit',$id);
 
     }
 }
