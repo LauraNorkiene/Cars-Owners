@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ShortCode;
 use Closure;
 use Illuminate\Http\Request;
 
-class ShortCode
+class ShortCodeMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,18 +18,16 @@ class ShortCode
     public function handle(Request $request, Closure $next)
     {
         ///Kodas vykdomas pries krovima
-        $response= $next($request);
+        $response = $next($request);
         //Kodas vykdomas po krovimo
-        $html= $response->content();
+        $html = $response->content();
 
-        $codes=ShortCode::all();
-        foreach ($codes as $code){
-            echo $code->shortcode;
-            if (strstr($request->shortcode,$code->shortcode)){
-                return  $response->setContent(str_replace($code->shortcode, $code->replace, $html));
-            }
+        $codes = ShortCode::all();
+        foreach ($codes as $code) {
+
+            $html = str_replace($code->shortcode, $code->replace, $html);
+            $response->setContent($html);
+            return $response;
         }
-
-        return $response;
-}
+    }
 }

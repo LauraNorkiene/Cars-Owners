@@ -13,3 +13,4 @@ class Car extends Model
         return $this->belongsTo(Owner::class);
     }
 }
+

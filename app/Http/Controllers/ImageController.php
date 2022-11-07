@@ -94,6 +94,8 @@ class ImageController extends Controller
     public function destroy(Image $image)
     {
         unlink( storage_path('/app/cars/'.$image->img));
-        
+        $image->delete();
+
+        return redirect()->back();
     }
 }

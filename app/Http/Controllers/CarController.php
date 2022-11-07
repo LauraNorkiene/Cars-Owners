@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Image;
+use App\Models\images;
 use Illuminate\Http\Request;
 use App\Models\Owner;
 
@@ -15,8 +17,10 @@ class CarController extends Controller
      */
     public function index()
     {
+        $images=Image::all();
+        $owners=Owner::all();
         $cars= Car::all();
-        return view("cars.index",['cars'=>$cars]);
+        return view("cars.index",['cars'=>$cars, 'owners'=>$owners, 'images'=>$images]);
     }
 
     /**
@@ -26,8 +30,10 @@ class CarController extends Controller
      */
     public function create()
     {
+        $image=Image::all();
+        $car=Car::all();
         $owners=Owner::all();
-        return view('cars.create', ['owners'=>$owners]);
+        return view('cars.create', ['car'=>$car,'owners'=>$owners,'image'=>$image]);
     }
 
     /**
@@ -38,13 +44,12 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'reg_number'=>['required','min:5','max:10','unique:App\Models\Car,reg_number'],
-            'brand'=>['required','alpha_num','min:3', 'max:16'],
-            'model'=>['required','alpha_num','min:3', 'max:16'],
-
-        ]);
-
+//        $request->validate([
+////            'reg_number'=>['required','min:5','max:10','unique:App\Models\Car,reg_number'],
+//            'brand'=>['required','alpha_num','min:3', 'max:16'],
+//            'model'=>['required','alpha_num','min:3', 'max:16'],
+//
+//        ]);
 
         $car = new Car();
         $car->reg_number = $request->reg_number;
@@ -54,7 +59,16 @@ class CarController extends Controller
 
         $car->save();
 
-      return redirect()->route('cars.index');
+        $insertedId=$car->id;
+        $image = new Image();
+
+        $img=$request->file('image');
+        $filname=$car->id.'.'.$img->extension();
+        $image->name=$filname;
+        $image->car_id=$insertedId;
+        $img->storeAs('cars',$filname);
+        $image->save();
+        return redirect()->route('cars.index');
 
     }
     /**
@@ -65,7 +79,9 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-       return "rodyti viena";
+        $images=Image::all();
+        $owners=Owner::all();
+        return view('cars.show', ['car'=>$car, 'owners'=>$owners, 'images'=>$images]);
     }
 
     /**
@@ -76,8 +92,9 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
+        $images=Image::all();
         $owners=Owner::all();
-        return view('cars.update', ['car'=>$car],['owners'=>$owners]);
+        return view('cars.update', ['car'=>$car],['owners'=>$owners, 'images'=>$images]);
 
     }
 
@@ -102,6 +119,12 @@ class CarController extends Controller
         $car->model = $request->model;
         $car->owner_id = $request->owner_id;
 
+        $img=$request->file('image');
+        $filname=$car->id.'.'.$img->extension();
+
+        $car->name=$filname;
+        $img->storeAs('cars',$filname);
+
         $car->save();
         return redirect()->route('cars.index');
     }
@@ -117,6 +140,9 @@ class CarController extends Controller
         $car->delete();
         return redirect()->route('cars.index');
     }
-
+    public function display($name,Request $request){
+        $file=storage_path('app/cars/'.$name);
+        return response()->file( $file );
+    }
 
 }

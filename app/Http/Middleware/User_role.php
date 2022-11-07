@@ -16,6 +16,15 @@ class User_role
      */
     public function handle(Request $request, Closure $next)
     {
+        if ($request->user()==null){
+            return redirect('/cars');
+        }
+
+        if (Gate::denies('edit')){
+            return redirect('/cars');
+        }
+
         return $next($request);
     }
+
 }

@@ -2,7 +2,7 @@
 @section('content')
 
 
-    <form action="{{ route('cars.update', $car->id) }}" method="post">
+    <form action="{{ route('cars.update', $car->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -46,6 +46,11 @@
                     <option @if($owner->id==$car->owner_id) selected @endif value="{{ $owner->id }}"> {{$owner->name}}</option>
                 @endforeach
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Automobilio nuotrauka:</label>
+            <input type="file" class="form-control" name="image">
         </div>
 
         <button class="btn btn-primary">Atnaujinti</button>

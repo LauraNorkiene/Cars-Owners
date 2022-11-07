@@ -21,7 +21,8 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+{{--                {{ config('app.name', 'Laravel') }}--}}
+                <h4>Draudimas</h4>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -35,6 +36,13 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="btn btn-success" href="{{ route('setLang', 'lt') }}">LT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-success mx-1" href="{{ route('setLang', 'en') }}">EN</a>
+                        </li>
                     <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))

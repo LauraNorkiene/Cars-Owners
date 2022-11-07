@@ -14,7 +14,8 @@ class ShortCodeController extends Controller
      */
     public function index()
     {
-        //
+        $shortCode= ShortCode::all();
+        return view("short_codes.index",['shortCode'=>$shortCode]);
     }
 
     /**
@@ -24,7 +25,7 @@ class ShortCodeController extends Controller
      */
     public function create()
     {
-        //
+        return view('short_codes.create');
     }
 
     /**
@@ -35,7 +36,14 @@ class ShortCodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $shortCode = new shortCode();
+        $shortCode->shortcode = $request->shortcode;
+        $shortCode->replace = $request->replace;
+
+        $shortCode->save();
+
+        return redirect()->route('short_codes.index');
+
     }
 
     /**
@@ -57,7 +65,8 @@ class ShortCodeController extends Controller
      */
     public function edit(ShortCode $shortCode)
     {
-        //
+
+        return view('short_codes.update', ['shortCode'=>$shortCode]);
     }
 
     /**
@@ -69,7 +78,12 @@ class ShortCodeController extends Controller
      */
     public function update(Request $request, ShortCode $shortCode)
     {
-        //
+        $shortCode->shortcode = $request->shortcode;
+        $shortCode->replace = $request->replace;
+
+        $shortCode->save();
+
+        return redirect()->route('short_codes.index');
     }
 
     /**
@@ -80,6 +94,7 @@ class ShortCodeController extends Controller
      */
     public function destroy(ShortCode $shortCode)
     {
-        //
+        $shortCode->delete();
+        return redirect()->route('short_codes.index');
     }
 }

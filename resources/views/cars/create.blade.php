@@ -2,7 +2,7 @@
 @section('content')
 
 
-    <form action="{{ route('cars.store') }}" method="post">
+    <form action="{{ route('cars.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div  class="mb-3">
             <label class="form-label">Registracijos numeris:</label>
@@ -46,13 +46,20 @@
             <label class="form-label">Savininkas:</label>
             <select name="owner_id" class="form-control">
                 @foreach ($owners as $owner)
-                    <option value="{{ $owner->id }}"> {{$owner->name}}</option>
+                    <option value="{{ $owner->id }}"@selected(old('$owner_id')==$owner->id)> {{$owner->name}}</option>
+
                 @endforeach
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Automobilio nuotrauka:</label>
+            <input type="file" class="form-control" name="image">
         </div>
 
 
 
         <button class="btn btn-primary">Pridėti</button>
+        <a class="btn btn-success mx-3 float-end" href="{{ route('cars.index') }}">Atgal</a>
     </form>
 @endsection
